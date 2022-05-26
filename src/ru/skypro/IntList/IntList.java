@@ -1,6 +1,9 @@
 package ru.skypro.IntList;
 
 public interface IntList {
+
+    int [] array = new int[10];
+
     int getSizeOfArray();
 
     // Добавление элемента.Вернуть добавленный элемент в качестве результата выполнения.

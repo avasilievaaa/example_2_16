@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 public class IntListImpl implements IntList {
 
-    private int[] array = new int[10];
+    private int [] array;
     private int indexOfElement = 0;
 
     private void grow() {
@@ -17,50 +17,6 @@ public class IntListImpl implements IntList {
     @Override
     public int getSizeOfArray() {
         return array.length;
-    }
-
-    private static void swapElements(int[] arr, int left, int right) {
-        int temp = arr[left];
-        arr[left] = arr[right];
-        arr[right] = temp;
-    }
-
-    private void intSortSelection(int[] arr) {
-        for (int i = 0; i < arr.length - 1; i++) {
-            int minElementIndex = i;
-            for (int j = i + 1; j < arr.length; j++) {
-                if (arr[j] < arr[minElementIndex]) {
-                    minElementIndex = j;
-                }
-            }
-            swapElements(arr, i, minElementIndex);
-        }
-    }
-
-    public void sortSelection(int[] arr) {
-        long start = System.currentTimeMillis();
-        intSortSelection(arr);
-        System.out.println(System.currentTimeMillis() - start);
-    }
-
-    private static boolean contains(int[] arr, int element) {
-        int min = 0;
-        int max = arr.length - 1;
-
-        while (min <= max) {
-            int mid = (min + max) / 2;
-
-            if (element == arr[mid]) {
-                return true;
-            }
-
-            if (element < arr[mid]) {
-                max = mid - 1;
-            } else {
-                min = mid + 1;
-            }
-        }
-        return false;
     }
 
     @Override
@@ -128,7 +84,7 @@ public class IntListImpl implements IntList {
 
     @Override
     public boolean contains(int item) {
-        sortSelection(array);
+        quickSort(array, 0, array.length - 1);
         return contains(array, item);
     }
 
@@ -201,5 +157,49 @@ public class IntListImpl implements IntList {
     @Override
     public int[] toArray() {
         return Arrays.copyOf(array, indexOfElement);
+    }
+
+    private static void swapElements(int[] arr, int left, int right) {
+        int temp = arr[left];
+        arr[left] = arr[right];
+        arr[right] = temp;
+    }
+
+    private static void quickSort(int[] arr, int begin, int end) {
+        if (begin < end) {
+            int partitionIndex = partition(arr, begin, end);
+            quickSort(arr, begin, partitionIndex - 1);
+            quickSort(arr, partitionIndex + 1, end);
+        }
+    }
+
+    private static int partition(int[] arr, int begin, int end) {
+        int pivot = arr[end];
+        int i = (begin - 1);
+        for (int j = begin; j < end; j++) {
+            if (arr[j] <= pivot) {
+                i++;
+                swapElements(arr, i, j);
+            }
+        }
+        swapElements(arr, i + 1, end);
+        return i + 1;
+    }
+
+    private static boolean contains(int[] arr, int element) {
+        int min = 0;
+        int max = arr.length - 1;
+        while (min <= max) {
+            int mid = (min + max) / 2;
+            if (element == arr[mid]) {
+                return true;
+            }
+            if (element < arr[mid]) {
+                max = mid - 1;
+            } else {
+                min = mid + 1;
+            }
+        }
+        return false;
     }
 }
